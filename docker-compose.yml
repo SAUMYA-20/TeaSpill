@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  mongodb:
+    image: mongo:6
+    container_name: teaspill-mongo
+    restart: always
+    ports:
+    - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - teanet
+    env_file:
+    - .env
+
+  auth-service:
+    build: ./services/auth
+    restart: always
+    env_file:
+    - .env
+    networks:
+      - teanet
+
+  tea-service:
+    build: ./services/tea
+    restart: always
+    env_file:
+    - .env
+    networks:
+      - teanet
+
+  client:
+    build: ./client
+    restart: always
+    networks:
+      - teanet
+
+  nginx:
+    image: nginx:latest
+    container_name: teaspill-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - auth-service
+      - tea-service
+      - client
+    networks:
+      - teanet
+
+volumes:
+  mongo_data:
+
+networks:
+  teanet:
