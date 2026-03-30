@@ -232,9 +232,6 @@ HTTPS + SSL (Certbot)
 
 Mongo authentication
 
-CI/CD pipeline
-
-Kubernetes deployment
 
 👩‍💻 Author
 
